@@ -65,33 +65,16 @@ const conversations = {
   }
 };
 
-// Endpoint to get conversations by topics
+// Endpoint to retrieve all conversations by topic
 app.get('/api/conversations', (req, res) => {
-  const topicsParam = req.query.topics; // topics=education:health:travel:business
-  
-  if (topicsParam) {
-    const topics = topicsParam.split(':');
-    let result = [];
+  const { topic } = req.query;
 
-    topics.forEach(topic => {
-      if (conversations[topic]) {
-        result.push({
-          topic,
-          imageUrl: conversations[topic].imageUrl,
-          dialogues: conversations[topic].dialogues
-        });
-      }
-    });
-
-    if (result.length > 0) {
-      res.json(result);
-    } else {
-      res.status(404).json({ message: "No conversations found for the specified topics." });
-    }
-  } else {
-    res.status(400).json({ message: "No topics provided in the query." });
+  if (!topic || !conversations[topic]) {
+    return res.status(404).json({ error: 'Topic not found' });
   }
+
+  res.status(200).json(conversations[topic]);
 });
 
-// Export the app for serverless function
+// Export the app as a module for Vercel
 module.exports = app;
