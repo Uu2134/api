@@ -93,8 +93,5 @@ app.get('/api/conversations', (req, res) => {
   }
 });
 
-// Start the server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// Export the app for serverless function
+module.exports = app;
